@@ -1,9 +1,28 @@
 using HoroshopWeb.Clients;
 using HoroshopWeb.HostedServices;
 using HoroshopWeb.Infrastructure;
+using HoroshopWeb.Settings;
 using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddOptions<FileSettings>()
+    .Configure(s =>
+    {
+        var dataFolder = builder.Configuration.GetValue<string>("DATA_FOLDER");
+        if (string.IsNullOrEmpty(dataFolder))
+            return;
+
+        if (Directory.Exists(dataFolder))
+        {
+            s.DataFolder = dataFolder;
+        }
+        else
+        {
+            s.DataFolder = Path.Combine(Directory.GetCurrentDirectory(), dataFolder);
+        }
+    })
+    .ValidateOnStart();
 
 builder.Services.AddHttpClient<ViatecClient>();
 builder.Services.AddScoped<DataService>();
