@@ -1,0 +1,26 @@
+version: '3'
+services:
+  app:
+    image: ghcr.io/exytab/horoshop:0.0.1
+    build:
+      context: .
+      dockerfile: HoroshopWeb/Dockerfile
+    ports:
+      - 8090:8080
+    volumes:
+      - type: bind
+        source: C:/Data1
+        target: c:/data
+    environment:
+      - DATA_FOLDER=C:/data
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    restart: unless-stopped
+
+networks:
+  default:
+    external:
+      name: nat
