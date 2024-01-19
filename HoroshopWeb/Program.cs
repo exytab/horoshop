@@ -14,6 +14,9 @@ builder.Services.AddHostedService<ViatecHostedService>();
 
 var app = builder.Build();
 
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 app.MapPost("/upload", async (
     IFormFile file,
     [FromServices] FileService fileService,
